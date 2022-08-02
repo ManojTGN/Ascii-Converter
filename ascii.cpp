@@ -4,6 +4,9 @@
 #include <sys/stat.h>
 #include <filesystem>
 
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
 using namespace std;
 
 struct {
@@ -11,7 +14,7 @@ struct {
     int renderStringMode = 1;
     int renderQuality = 80;
 
-    string inputFileLocation;
+    string inputFileLocation = "img.png";
     string inputFileName;
 
     string outputFileLocation;
@@ -58,10 +61,14 @@ bool isParamsValid(int count,char **argv){
 
 //commandline: *.exe "Location/To/Image-Video.{extension}" [quality 1-100] [rendermode 1-3] [outputLocation "Location/To/Output"]
 int main(int argc, char **argv){
+    if(argc <=1 ) return -1;
+
     if(isParamsValid(argc,argv)){
         readParameter(argc,argv);
         
-        cout<<params.inputFileLocation<<endl<<params.inputFileName<<endl<<params.outputFileLocation<<endl<<params.renderQuality<<endl<<params.renderStringMode<<endl;
+        Mat img = imread(params.inputFileLocation);
+        imshow("Image",img);
+        waitKey(0);
 
     }else{
 
@@ -69,3 +76,4 @@ int main(int argc, char **argv){
 
     return 0;
 }
+//g++ ascii.cpp -I"include" -L"lib" -o ascii.exe -lopencv_core460 -lopencv_imgproc460 -lopencv_highgui460 -lopencv_ml460 -lopencv_video460 -lopencv_features2d460 -lopencv_calib3d460 -lopencv_objdetect460 -lopencv_flann460 -lopencv_videoio460 -lopencv_dnn460 -lopencv_gapi460 -lopencv_imgcodecs460 -lopencv_stitching460 -lopencv_photo460
