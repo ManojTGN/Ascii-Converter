@@ -5,16 +5,22 @@
 #include <filesystem>
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 using namespace cv;
 using namespace std;
+
+
+string Modes[5] = {
+    "Ñ@#W$9876543210?!abc;:+=-,._ "
+};
 
 struct {
 
     int renderStringMode = 1;
     int renderQuality = 80;
 
-    string inputFileLocation = "img.png";
+    string inputFileLocation;
     string inputFileName;
 
     string outputFileLocation;
@@ -59,6 +65,32 @@ bool isParamsValid(int count,char **argv){
     return true;
 }
 
+
+Mat resizeImage(Mat img){
+    Mat resizedImg;
+    resize(img, resizedImg, Size((img.size[0]/100)*params.renderQuality, (img.size[1]/100)*params.renderQuality), INTER_LINEAR);
+    return resizedImg;
+}
+
+int map_(int x, int in_min, int in_max, int out_min, int out_max){
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+void loadCharSet(Mat img){
+    int tmp;
+    string* charset = new string[img.rows];
+
+    for(int i=0; i<img.rows; i++){
+        for(int j=0; j<img.cols; j++){
+            tmp = img.at<uchar>(i,j);
+            tmp = map_(tmp,0,255,0,Modes[0].length()-1);
+            charset[i]+=Modes[0][tmp];
+        }
+        cout<<charset[i]<<endl;
+    }
+}
+
+
 //commandline: *.exe "Location/To/Image-Video.{extension}" [quality 1-100] [rendermode 1-3] [outputLocation "Location/To/Output"]
 int main(int argc, char **argv){
     if(argc <=1 ) return -1;
@@ -66,14 +98,19 @@ int main(int argc, char **argv){
     if(isParamsValid(argc,argv)){
         readParameter(argc,argv);
         
-        Mat img = imread(params.inputFileLocation);
+        Mat Image = imread(params.inputFileLocation,0);
+        //cvtColor(Image, Image, cv::COLOR_BGR2GRAY);
+        Image = resizeImage(Image);
+        loadCharSet(Image);
+
+        /*
         imshow("Image",img);
         waitKey(0);
-
+        */
     }else{
 
     }
 
     return 0;
 }
-//g++ ascii.cpp -I"include" -L"lib" -o ascii.exe -lopencv_core460 -lopencv_imgproc460 -lopencv_highgui460 -lopencv_ml460 -lopencv_video460 -lopencv_features2d460 -lopencv_calib3d460 -lopencv_objdetect460 -lopencv_flann460 -lopencv_videoio460 -lopencv_dnn460 -lopencv_gapi460 -lopencv_imgcodecs460 -lopencv_stitching460 -lopencv_photo460
+//g++ ascii.cpp -o ascii.exe -lopencv_core460 -lopencv_imgproc460 -lopencv_highgui460 -lopencv_ml460 -lopencv_video460 -lopencv_features2d460 -lopencv_calib3d460 -lopencv_objdetect460 -lopencv_flann460 -lopencv_videoio460 -lopencv_dnn460 -lopencv_gapi460 -lopencv_imgcodecs460 -lopencv_stitching460 -lopencv_photo460
