@@ -6,6 +6,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/freetype.hpp>
 
 using namespace cv;
 using namespace std;
@@ -78,9 +79,9 @@ int map_(int x, int in_min, int in_max, int out_min, int out_max){
 
 void loadCharSet(Mat img){
     int tmp;
-    Mat Image(img.cols*10,img.rows*10, CV_8UC3, cv::Scalar(0));
+    Mat Image(img.cols*8,img.rows*8, CV_8UC3, cv::Scalar(0));
     string* charset = new string[img.rows];
-
+    
     for(int i=0; i<img.rows; i++){
         for(int j=0; j<img.cols; j++){
             tmp = img.at<uchar>(i,j);
@@ -88,8 +89,8 @@ void loadCharSet(Mat img){
             charset[i]+=Modes[0][tmp];
         }
 
-        putText(Image, charset[i], cv::Point(0,i*5),FONT_HERSHEY_DUPLEX,0.2,CV_RGB(255, 255, 255), 1);
-        //cout<<charset[i]<<endl;
+        putText(Image, charset[i], cv::Point(0,i*5),FONT_HERSHEY_SIMPLEX,0.2,CV_RGB(255, 255, 255), 1);
+        //addText(Image,charset[i],cv::Point(0,i*5),fontQt("JetBrains Mono"));
     }
     imshow("Output",Image);
     waitKey(0);
@@ -98,7 +99,6 @@ void loadCharSet(Mat img){
 
 //commandline: *.exe "Location/To/Image-Video.{extension}" [quality 1-100] [rendermode 1-3] [outputLocation "Location/To/Output"]
 int main(int argc, char **argv){
-    cout<<Modes[0];
     if(argc <=1 ) return -1;
 
     if(isParamsValid(argc,argv)){
@@ -110,11 +110,10 @@ int main(int argc, char **argv){
         loadCharSet(Image);
 
         /*
-        imshow("Image",img);
+        JetBrains
+        imshow("Image",Image);
         waitKey(0);
         */
-    }else{
-
     }
 
     return 0;
