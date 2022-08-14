@@ -12,7 +12,7 @@ using namespace std;
 
 
 string Modes[5] = {
-    "Ñ@#W$9876543210?!abc;:+=-,._ "
+    "#@XW$9876543210?!abc;:+=-,._ "
 };
 
 struct {
@@ -78,21 +78,27 @@ int map_(int x, int in_min, int in_max, int out_min, int out_max){
 
 void loadCharSet(Mat img){
     int tmp;
+    Mat Image(img.cols*10,img.rows*10, CV_8UC3, cv::Scalar(0));
     string* charset = new string[img.rows];
 
     for(int i=0; i<img.rows; i++){
         for(int j=0; j<img.cols; j++){
             tmp = img.at<uchar>(i,j);
-            tmp = map_(tmp,0,255,0,Modes[0].length()-1);
+            tmp = map_(tmp,0,255,0,Modes[0].length());
             charset[i]+=Modes[0][tmp];
         }
-        cout<<charset[i]<<endl;
+
+        putText(Image, charset[i], cv::Point(0,i*5),FONT_HERSHEY_DUPLEX,0.2,CV_RGB(255, 255, 255), 1);
+        //cout<<charset[i]<<endl;
     }
+    imshow("Output",Image);
+    waitKey(0);
 }
 
 
 //commandline: *.exe "Location/To/Image-Video.{extension}" [quality 1-100] [rendermode 1-3] [outputLocation "Location/To/Output"]
 int main(int argc, char **argv){
+    cout<<Modes[0];
     if(argc <=1 ) return -1;
 
     if(isParamsValid(argc,argv)){
