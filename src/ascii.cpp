@@ -7,6 +7,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/freetype.hpp>
+#include <opencv2/highgui.hpp>
 
 using namespace cv;
 using namespace std;
@@ -81,7 +82,8 @@ void loadCharSet(Mat img){
     int tmp;
     Mat Image(img.cols*8,img.rows*8, CV_8UC3, cv::Scalar(0));
     string* charset = new string[img.rows];
-    
+    QtFont font = fontQt("JetBrains");
+
     for(int i=0; i<img.rows; i++){
         for(int j=0; j<img.cols; j++){
             tmp = img.at<uchar>(i,j);
@@ -89,15 +91,14 @@ void loadCharSet(Mat img){
             charset[i]+=Modes[0][tmp];
         }
 
-        putText(Image, charset[i], cv::Point(0,i*5),FONT_HERSHEY_SIMPLEX,0.2,CV_RGB(255, 255, 255), 1);
-        //addText(Image,charset[i],cv::Point(0,i*5),fontQt("JetBrains Mono"));
+        //putText(Image, charset[i], cv::Point(0,i*5),FONT_HERSHEY_SIMPLEX,0.2,CV_RGB(255, 255, 255), 1);
+        addText(Image,charset[i],cv::Point(0,i*5),font);
     }
     imshow("Output",Image);
     waitKey(0);
 }
 
 
-//commandline: *.exe "Location/To/Image-Video.{extension}" [quality 1-100] [rendermode 1-3] [outputLocation "Location/To/Output"]
 int main(int argc, char **argv){
     if(argc <=1 ) return -1;
 
@@ -118,4 +119,7 @@ int main(int argc, char **argv){
 
     return 0;
 }
+
+//commandline: *.exe "Location/To/Image-Video.{extension}" [quality 1-100] [rendermode 1-3] [outputLocation "Location/To/Output"]
 //g++ ascii.cpp -o ascii.exe -lopencv_core460 -lopencv_imgproc460 -lopencv_highgui460 -lopencv_ml460 -lopencv_video460 -lopencv_features2d460 -lopencv_calib3d460 -lopencv_objdetect460 -lopencv_flann460 -lopencv_videoio460 -lopencv_dnn460 -lopencv_gapi460 -lopencv_imgcodecs460 -lopencv_stitching460 -lopencv_photo460
+//g++ ascii.cpp -o ascii.exe -lopencv_core455 -lopencv_imgproc455 -lopencv_highgui455 -lopencv_ml455 -lopencv_video455 -lopencv_features2d455 -lopencv_calib3d455 -lopencv_objdetect455 -lopencv_flann455 -lopencv_videoio455 -lopencv_dnn455 -lopencv_gapi455 -lopencv_imgcodecs455 -lopencv_stitching455 -lopencv_photo455
