@@ -50,18 +50,23 @@ def loadImageCharSet(IMAGE) -> list:
                 )
             ]
 
+
     return CHARSET
 
 def makeImage(CHARSET:list,frameNumber:int = 1,totalFrames:int = 1) -> Image:
 
     FONT = ImageFont.truetype("src\\fonts\\0.ttf", 16)
     width,height = FONT.getsize('A')
+    kerning = 2
 
-    IMAGE = Image.new('RGB',(width*len(CHARSET[0]),height*len(CHARSET)))
+    IMAGE = Image.new('RGB',(width*len(CHARSET[0])*kerning,height*len(CHARSET)))
     DRAW = ImageDraw.Draw(IMAGE)
     for index,LINE in enumerate(CHARSET):
         printProgressBar(index, len(CHARSET)-1, prefix = f'Frame[{frameNumber}/{totalFrames}]:', suffix = 'Complete', length = 10)
-        DRAW.text((0, index*height),LINE,(255,255,255),font=FONT)
+        
+        #DRAW.text((0, index*height),LINE,(255,255,255),font=FONT)
+        for idx,CHAR in enumerate(LINE):
+            DRAW.text((idx*width*kerning, index*height),CHAR,(255,255,255),font=FONT)
     
     return IMAGE
 
