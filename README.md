@@ -1,6 +1,6 @@
 # Ascii-Converter
 
-A Program To Convert Image/Video Into An Ascii Art ! Done With Python
+A Program To Convert Image Into An Ascii Art ! Done With Python
 
 ## Usage
 Directly Run The Application / You Can Use The Terminal
@@ -12,4 +12,4 @@ Directly Run The Application / You Can Use The Terminal
 ```
 
 ## Example AsciiArt Conversion
-<img src="https://github.com/ManojTGN/Ascii-Converter/blob/main/outputs/CompressedTajMahal.gif" />
+<img src="https://github.com/ManojTGN/Ascii-Converter/blob/main/src/outputs/CompressedTajMahal.gif" />
