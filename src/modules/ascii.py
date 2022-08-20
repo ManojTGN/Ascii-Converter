@@ -1,10 +1,20 @@
 import urllib.request
 from PIL import Image,ImageFont,ImageDraw
-
 from modules.parameter import isUrl
 
-
-def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+"""
+    Terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        autosize    - Optional  : automatically resize the length of the progress bar to the terminal window (Bool)
+"""
+def printProgressBar (iteration:int, total:int, prefix:str = '', suffix:str = '', decimals:int = 1, length:int = 100, fill:str = '█', printEnd = "\r"):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
@@ -12,10 +22,22 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
         print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
         if iteration == total: print()
 
+"""
+    Maps One Ranged Value To Another Ranged Value
+    @params:
+        value     - Required  : Value to be changed from range 1 to 2 (Int)
+        leftMin   - Required  : Minimum of range one (Int)
+        leftMax   - Optional  : Maximum of range one (Int)
+        rightMin  - Optional  : Minimum of range two (Int)
+        rightMax  - Optional  : Maximum of range two (Int)
+"""
 def map_(value, leftMin, leftMax, rightMin, rightMax) -> int:
     return int(rightMin + ((float(value - leftMin) / float((leftMax - leftMin))) * (rightMax - rightMin)))
 
 class AsciiArt:
+
+    # Renders Mode To Select The Characters
+    # In The Ascii Art (0) is default
     RENDER_MODES = [
         "Ñ@#W$9876543210?!abc;:+=-,._ ",
         ":$#$:   \"4b. ':.",
@@ -23,8 +45,18 @@ class AsciiArt:
         ""
     ]
 
+
+    """
+        AsciiArt Init Function
+        The Option Dict Must Contains
+            renderQuality, outputQuality, renderMode
+            inputFileLocation, outputFolderLocation
+        @params:
+            OPTIONS     - Required  :  Valid Argument Dict (Dict)
+    """
     def __init__(self,OPTIONS) -> None:
         self.OPTIONS = OPTIONS
+
 
     def loadImageCharSet(self,IMAGE:Image.Image) -> list:
         CHARSET = []
@@ -58,7 +90,7 @@ class AsciiArt:
         IMAGE = Image.new('RGB',(width*len(CHARSET[0])*kerning,height*len(CHARSET)))
         DRAW = ImageDraw.Draw(IMAGE)
         for index,LINE in enumerate(CHARSET):
-            printProgressBar(index, len(CHARSET)-1, prefix = f'Frame[{frameNumber}/{totalFrames}]:', suffix = 'Complete', length = 10)
+            printProgressBar(index, len(CHARSET)-1, prefix = f'Frame[{frameNumber}/{totalFrames}]:', suffix = 'Complete', length = 15)
             
             #DRAW.text((0, index*height),LINE,(255,255,255),font=FONT)
             for idx,CHAR in enumerate(LINE):
@@ -73,10 +105,13 @@ class AsciiArt:
                 urllib.request.urlretrieve(self.OPTIONS['inputFileLocation'],'Input.png')
                 IMAGE = Image.open('Input.png').convert('L')
             except:
-                print("Unable To Download/Open The Image!")
+                print("Unable to download/open the image!")
                 return
         else:
-            IMAGE = Image.open(self.OPTIONS['inputFileLocation']).convert('L')
+            try:IMAGE = Image.open(self.OPTIONS['inputFileLocation']).convert('L')
+            except:
+                print("Unable to open the image!")
+                return
 
         IMAGE = self.resizeToRenderQuality(IMAGE)
         CHARSET = self.loadImageCharSet(IMAGE)
