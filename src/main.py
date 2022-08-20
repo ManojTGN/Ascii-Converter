@@ -9,12 +9,8 @@ from PIL import Image,ImageFont,ImageDraw
 
 class InputType(Enum):
     NONE = 0
-
     IMAGE_LINK = 1
     IMAGE_LOCATION = 2
-
-    VIDEO_LINK = 3
-    VIDEO_LOCATION = 4
 
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -28,8 +24,11 @@ def map_(value, leftMin, leftMax, rightMin, rightMax) -> int:
     return int(rightMin + ((float(value - leftMin) / float((leftMax - leftMin))) * (rightMax - rightMin)))
 
 def exists(path:str):
-    r = requests.head(path)
-    return r.status_code == requests.codes.ok
+    try:
+        r = requests.head(path)
+        return r.status_code == requests.codes.ok
+    except: 
+        return None
 
 def isParamValid(args) -> bool:
     if( len(args) == 0 or (not path.exists(args[0]) and not exists(args[0])) ):return False
@@ -84,7 +83,9 @@ def loadImageCharSet(IMAGE:Image.Image) -> list:
     return CHARSET
 
 def makeImage(CHARSET:list,frameNumber:int = 1,totalFrames:int = 1) -> Image.Image:
-    FONT = ImageFont.truetype("src\\fonts\\0.ttf", 16)
+
+    try:FONT = ImageFont.truetype("src\\fonts\\0.ttf", 16)
+    except:FONT = ImageFont.load_default()
     width,height = FONT.getbbox('A')[2:]
     kerning = 2
 
@@ -100,12 +101,27 @@ def makeImage(CHARSET:list,frameNumber:int = 1,totalFrames:int = 1) -> Image.Ima
     return IMAGE
 
 def Main(args:list) -> None:
-    if(len(args) == 1 or not isParamValid(args[1:])): 
-        print("Invalid Parameter Specified!")
-        return
+    if(len(args) == 1): 
+
+        args.append(input("Input File Location:"))
+        args.append(input("RenderQuality[1-100] (100):"))
+        if(args[-1] == "" or args[-1] == " "):args[-1] = '100'
+
+        args.append(input(f"RenderMode[0-{len(RENDER_MODES)-1}] (0):"))
+        if(args[-1] == "" or args[-1] == " "):args[-1] = '0'
+
+        args.append(input("OutputQuality[1-100] (100):"))
+        if(args[-1] == "" or args[-1] == " "):args[-1] = '100'
+
+        args.append(input(f"Output Folder Location ({OPTIONS['outputFolderLocation']}):"))
+        if(args[-1] == "" or args[-1] == " "):args[-1] = os.getcwd()
     
+    if(not isParamValid(args[1:])):
+        print("Invalid Parameter Found!")
+        return
     loadParams(args[1:])
-    if(OPTIONS['inputType'] == InputType.IMAGE_LINK or OPTIONS['inputType'] == InputType.IMAGE_LOCATION): 
+
+    if(OPTIONS['inputType'] != InputType.NONE): 
         if(OPTIONS['inputType'] == InputType.IMAGE_LINK):
             try:
                 urllib.request.urlretrieve(OPTIONS['inputFileLocation'],'Input.png')
@@ -120,10 +136,8 @@ def Main(args:list) -> None:
 
         IMAGE = makeImage(CHARSET)
         IMAGE.save(OPTIONS['outputFolderLocation']+"\\output.jpg",optimize=True,quality=OPTIONS['outputQuality'])
-    elif(OPTIONS['inputType'] == InputType.VIDEO_LINK or OPTIONS['inputType'] == InputType.VIDEO_LOCATION):
-        pass
     else:
-        print("Invalid Input Format/File/URL!")
+        print("Invalid Input Parameter")
         return
 
 RENDER_MODES = [
