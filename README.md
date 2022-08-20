@@ -12,4 +12,4 @@ Directly Run The Application / You Can Use The Terminal
 ```
 
 ## Example AsciiArt Conversion
-<img src="https://github.com/ManojTGN/Ascii-Converter/blob/main/outputs/CompressedTajMahal.gif" />
+<img src="https://github.com/ManojTGN/Ascii-Converter/blob/main/src/outputs/CompressedTajMahal.gif" />
