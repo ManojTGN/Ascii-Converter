@@ -36,6 +36,7 @@ def isParamValid(args) -> bool:
 
     if(path.exists(args[0])): OPTIONS['inputType'] = InputType.IMAGE_LOCATION
     elif(exists(args[0])): OPTIONS['inputType'] = InputType.IMAGE_LINK
+    else:OPTIONS['inputType'] = InputType.NONE
     if(len(args) == 1):return True
 
     if(not args[1].isnumeric() and (int(args[1]) >0 and int(args[1]) <= 100) ):return False
@@ -104,7 +105,7 @@ def Main(args:list) -> None:
         return
     
     loadParams(args[1:])
-    if(True): #Todo: If The File Is An Image
+    if(OPTIONS['inputType'] == InputType.IMAGE_LINK or OPTIONS['inputType'] == InputType.IMAGE_LOCATION): 
         if(OPTIONS['inputType'] == InputType.IMAGE_LINK):
             try:
                 urllib.request.urlretrieve(OPTIONS['inputFileLocation'],'Input.png')
@@ -119,11 +120,16 @@ def Main(args:list) -> None:
 
         IMAGE = makeImage(CHARSET)
         IMAGE.save(OPTIONS['outputFolderLocation']+"\\output.jpg",optimize=True,quality=OPTIONS['outputQuality'])
+    elif(OPTIONS['inputType'] == InputType.VIDEO_LINK or OPTIONS['inputType'] == InputType.VIDEO_LOCATION):
+        pass
+    else:
+        print("Invalid Input Format/File/URL!")
+        return
 
 RENDER_MODES = [
     "Ñ@#W$9876543210?!abc;:+=-,._ ",
-    "",
-    "",
+    ":$#$:   \"4b. ':.",
+    "██▓▓▒▒░░  ",
     ""
 ]
 
