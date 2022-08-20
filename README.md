@@ -2,7 +2,7 @@
 
 A Program To Convert Image/Video Into An Ascii Art ! Done With Python
 
-## usage
+## Usage
 Directly Run The Application / You Can Use The Terminal
 ```
  cd "to-the-.exe-path" 
