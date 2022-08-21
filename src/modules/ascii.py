@@ -1,3 +1,4 @@
+import os
 import urllib.request
 from modules.parameter import isUrl
 from PIL import Image,ImageFont,ImageDraw
@@ -128,7 +129,10 @@ class AsciiArt:
         kerning = 2
 
         # Creating an image with the width and height
-        IMAGE = Image.new('RGB',(width*len(CHARSET[0])*kerning,height*len(CHARSET)))
+        try: IMAGE = Image.new('RGB',(width*len(CHARSET[0])*kerning,height*len(CHARSET)))
+        except Exception as e:
+            print("Error In Creating New Image (Maybe MemoryError) \n",e) 
+            return
 
         # Making The Image Drawable To Write Text In It
         DRAW = ImageDraw.Draw(IMAGE)
@@ -155,17 +159,22 @@ class AsciiArt:
         # Checking if the fileLocation is an url or not
         if(isUrl(self.OPTIONS['inputFileLocation'])):
 
+            print("Downloading The Image",end='\r')
+
             # Downloading the image and saving it as tmp.png and loading
             # the image then converting the image to GreyScale image
             try:
                 urllib.request.urlretrieve(self.OPTIONS['inputFileLocation'],'tmp.png')
-                IMAGE = Image.open('Input.png').convert('L')
-            except:
-                print("Unable to download/open the image!")
+                IMAGE = Image.open('tmp.png').convert('L')
+                os.remove("tmp.png")
+            except Exception as e:
+                print("Unable to download/open the image! \n",e)
                 return
 
         # if not url then it must be a systempath
         else:
+
+            print("Reading The Image",end='\r')
 
             # loading the image and converting it to an greyscale image
             try:IMAGE = Image.open(self.OPTIONS['inputFileLocation']).convert('L')
@@ -173,8 +182,12 @@ class AsciiArt:
                 print("Unable to open the image!")
                 return
 
+        print("Resizing The Image",end='\r')
+
         # Resizing the image to the user specified renderquality(0-100)
         IMAGE = self.resizeToRenderQuality(IMAGE)
+
+        print("Getting Data From The Image",end='\r')
 
         # converting the resized image to the Ascii Characters List 
         CHARSET = self.loadImageCharSet(IMAGE)
@@ -183,4 +196,5 @@ class AsciiArt:
         IMAGE = self.makeImage(CHARSET)
 
         # Saving the image to the output location
-        IMAGE.save(self.OPTIONS['outputFolderLocation']+"\\output.jpg",optimize=True,quality=self.OPTIONS['outputQuality'])
+        if(IMAGE):
+            IMAGE.save(self.OPTIONS['outputFolderLocation']+"\\output.jpg",optimize=True,quality=self.OPTIONS['outputQuality'])
