@@ -1,6 +1,6 @@
 import sys
 from modules.ascii import AsciiArt
-from modules.parameter import getParameter,isParamValid, getParameterDict, PARAMS_ERRROR
+from modules.parameter import getParameter, isParamValid, getParameterDict, getParamsError
 
 """
     Main Function, Get And Validate The Parameter
@@ -24,7 +24,7 @@ def Main(args:list) -> None:
 
         # If The Parameter Is Invalid Then Printing
         # The Error And Exiting The Main Function
-        print(PARAMS_ERRROR)
+        print(f"\n    [ParameterError]: {getParamsError()}\n{' '*22}{'^'*len(getParamsError())}\n")
         return
 
     # Getting The Parameters In A Dict Type
@@ -35,4 +35,8 @@ def Main(args:list) -> None:
 
 # Calling The Main() Function With The Given 
 # Arguments In The Terminal.
-if(__name__ == "__main__"):Main(sys.argv)
+if(__name__ == "__main__"):
+    Main(sys.argv)
+    
+    # To Pause The Screen
+    input("Press Enter To Continue...")

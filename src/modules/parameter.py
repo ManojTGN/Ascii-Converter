@@ -6,12 +6,18 @@ from os import path
 PARAMS_ERRROR = ''
 
 """
+    To Return The Parameter Error
+"""
+def getParamsError() -> str:
+    return PARAMS_ERRROR
+
+"""
     To Check If It Is An System Directory/Path
     @params:
         location - Required  : Path-To-File/Folder (str)
 """
 def isLocalPath(location:str) -> bool:
-
+    if(location == "" or location == " "):return False
     return path.exists(location)
 
 """
@@ -20,7 +26,7 @@ def isLocalPath(location:str) -> bool:
         url - Required  :  URL (str)
 """
 def isUrl(url:str) -> bool:
-
+    if(url == "" or url == " "):return False
     try:
         r = requests.head(url)
         return r.status_code == requests.codes.ok
@@ -70,20 +76,32 @@ def isParamValid(PARAMETER:list) -> bool:
     if(len(PARAMETER) == 1):return True
 
     # Checking If The RenderQuality Can Be Converted To Int And Ranged From 1-100
-    if(not PARAMETER[1].isnumeric() and (int(PARAMETER[1]) >0 and int(PARAMETER[1]) <= 100) ):
-        PARAMS_ERRROR = 'Invalid RenderQuality At 2nd Parameter'
+    try:
+        if(not PARAMETER[1].isnumeric() and (int(PARAMETER[1]) >0 and int(PARAMETER[1]) <= 100) ):
+            PARAMS_ERRROR = 'Invalid RenderQuality At 2nd Parameter'
+            return False
+    except:
+        PARAMS_ERRROR = 'Invalid RenderQuality At 2nd Parameter. (Only Numerical Value Is Supported)'
         return False
     if(len(PARAMETER) == 2):return True
 
     # Checking If The RenderMode Can Be Converted To Int And Ranged From 0-2
-    if(not PARAMETER[2].isnumeric() and (int(PARAMETER[2]) >=0 and int(PARAMETER[2]) < 3) ):
-        PARAMS_ERRROR = 'Invalid RenderMode At 3rd Parameter'
+    try:
+        if(not PARAMETER[2].isnumeric() and (int(PARAMETER[2]) >=0 and int(PARAMETER[2]) < 3) ):
+            PARAMS_ERRROR = 'Invalid RenderMode At 3rd Parameter'
+            return False
+    except:
+        PARAMS_ERRROR = 'Invalid RenderMode At 3rd Parameter. (Only Numerical Value Is Supported)'
         return False
     if(len(PARAMETER) == 3):return True
 
     # Checking If The OutputQuality Can Be Converted To Int And Ranged From 1-100
-    if(not PARAMETER[3].isnumeric() and (int(PARAMETER[3]) >0 and int(PARAMETER[3]) <= 100)):
-        PARAMS_ERRROR = 'Invalid OutputQuality At 4th Parameter'
+    try:
+        if(not PARAMETER[3].isnumeric() and (int(PARAMETER[3]) >0 and int(PARAMETER[3]) <= 100)):
+            PARAMS_ERRROR = 'Invalid OutputQuality At 4th Parameter'
+            return False
+    except:
+        PARAMS_ERRROR = 'Invalid OutputQuality At 4th Parameter. (Only Numerical Value Is Supported)'
         return False
     if(len(PARAMETER) == 4):return True
 

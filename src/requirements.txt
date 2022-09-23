@@ -1,0 +1,4 @@
+sys
+urllib
+pillow
+requests

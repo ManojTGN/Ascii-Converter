@@ -1,4 +1,5 @@
 import os
+import sys
 import urllib.request
 from modules.parameter import isUrl
 from PIL import Image,ImageFont,ImageDraw
@@ -16,15 +17,19 @@ from PIL import Image,ImageFont,ImageDraw
         autosize    - Optional  : automatically resize the length of the progress bar to the terminal window (Bool)
 """
 def printProgressBar (iteration:int, total:int, prefix:str = '', suffix:str = '', decimals:int = 1, length:int = 100, fill:str = '█', printEnd = "\r"):
-        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-        filledLength = int(length * iteration // total)
-        bar = fill * filledLength + '-' * (length - filledLength)
+        try:
+            percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+            filledLength = int(length * iteration // total)
+            bar = fill * filledLength + '-' * (length - filledLength)
 
-        # Print The Bar
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
-        
-        # Print New Line on Complete
-        if iteration == total: print()
+            # Print The Bar
+            print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+            
+            # Print New Line on Complete
+            if iteration == total: print()
+        except:
+            if iteration != total:print(f'\rRendering |(Unable To Display Rendering Information)| Rendering')
+            else: print(f'\rRendering |(Unable To Display Rendering Information)| Complete')
 
 """
     Maps One Ranged Value To Another Ranged Value
@@ -120,7 +125,7 @@ class AsciiArt:
         
         # Loading the JetbrainMono font else loading the
         # system default font
-        try:FONT = ImageFont.truetype("src\\asserts\\font.ttf", 16)
+        try:FONT = ImageFont.truetype("asserts\\font.ttf", 6)
         except:FONT = ImageFont.load_default()
 
         # Getting the width and height of a single character of the font
