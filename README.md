@@ -1,6 +1,6 @@
 # Ascii-Converter
 
-A Program To Convert Image Into An Ascii Art ! Done With Python
+A Python program that utilizes the Pillow library to create an ASCII art representation of any image or video. The program has the capability to accept input images from local and from the internet links, making it a versatile tool for creating ASCII art from a wide range of sources.
 
 ## Usage
 Directly Run The Application / You Can Use The Terminal
